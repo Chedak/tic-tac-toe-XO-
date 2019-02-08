@@ -39,10 +39,25 @@ class Board
   end
 
   def check_state
-    x_won = @lines.any? do |line|
+    x_won = @lines.any? do |key, line|
               line.each {|cell| cell.state == 'x'}
             end
-    # puts x_won
+    o_won = @lines.any? do |key, line|
+              line.each {|cell| cell.state == 'o'}
+            end
+    all_occupied = @cells.each do |cell|
+                      cell.state == 'x' || cell.state == 'o'
+                    end
+    if x_won
+      puts "Player 1 won!"
+      return "finished"
+    elsif o_won
+      puts "Player 2 won!"
+      return "finished"
+    elsif all_occupied
+      puts "Draw!"
+      return "finished"
+    end
   end
 end
 
@@ -53,8 +68,12 @@ loop do
   puts "Player 1, choose a number of an empty cell"
   input_p1 = gets.chomp.to_i
   board.cells[input_p1 - 1].state = "x"
-  puts board.lines[:left][0].state
-  # board.check_state
+  # puts board.lines[:left][0].state
+  if board.check_state == "finished"
+    puts "Game over"
+    break
+  end
+
 
   # board.output
   # puts "Player 2, choose a number of an empty cell"
