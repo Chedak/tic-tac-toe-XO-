@@ -3,6 +3,7 @@ class Cell
 
   def initialize(id)
     @id = id
+    @state = "-"
 
     @row = 'top'    if id == 1 || id == 2 || id == 3
     @row = 'middle' if id == 4 || id == 5 || id == 6
@@ -31,7 +32,14 @@ class Board
     end
   end
 
+  def output
+    for cell in @cells
+      print cell.state + " "
+      puts "" if cell.column == "right"
+    end
+  end
 end
 
 board = Board.new
-board.cells.each {|cell| puts "cell no#{cell.id} is in the #{cell.row} row, and #{cell.column} column"}
+# board.cells.each {|cell| puts "cell no#{cell.id} is in the #{cell.row} row, and #{cell.column} column"}
+board.output
