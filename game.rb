@@ -3,7 +3,7 @@ class Cell
 
   def initialize(id)
     @id = id
-    @state = "-"
+    @state = id.to_s
 
     @row = 'top'    if id == 1 || id == 2 || id == 3
     @row = 'middle' if id == 4 || id == 5 || id == 6
@@ -42,4 +42,13 @@ end
 
 board = Board.new
 # board.cells.each {|cell| puts "cell no#{cell.id} is in the #{cell.row} row, and #{cell.column} column"}
-board.output
+
+loop do
+  board.output
+
+  puts "Player 1, choose a number of an empty cell"
+  input_p1 = gets.chomp.to_i
+
+  board.cells[input_p1 - 1].state = "x"
+
+end
