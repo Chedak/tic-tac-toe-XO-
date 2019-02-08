@@ -1,3 +1,4 @@
+# Classes
 class Cell
   attr_accessor :id, :row, :column, :diagonal, :state
 
@@ -33,22 +34,38 @@ class Board
   end
 
   def output
-    for cell in @cells
+    @cells.each do |cell|
       print cell.state + " "
       puts "" if cell.column == "right"
     end
   end
+
+
 end
 
-board = Board.new
-# board.cells.each {|cell| puts "cell no#{cell.id} is in the #{cell.row} row, and #{cell.column} column"}
+# Conditions!
+# def check_victor(board)
+#  @cells.each do |cell|
+#    top_x = 0
+#    if cell.state == "X" && cell.row == "top"
+#      top_x += 1
+#    end
+#  end
+#  puts top_x
+# end
 
+
+# GAME
+board = Board.new
 loop do
   board.output
-
   puts "Player 1, choose a number of an empty cell"
   input_p1 = gets.chomp.to_i
-
-  board.cells[input_p1 - 1].state = "x"
-
+  board.cells[input_p1 - 1].state = "X"
+  check_victory(board)
+  board.output
+  puts "Player 1, choose a number of an empty cell"
+  input_p2 = gets.chomp.to_i
+  board.cells[input_p2 - 1].state = "O"
+  check_victory(board)
 end
