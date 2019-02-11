@@ -1,20 +1,18 @@
-# Classes
 class Cell
   attr_accessor :id, :state
 
   def initialize(id)
     @id = id
-    @state = id.to_s
   end
 
 end
 
 class Board
-  attr_accessor :cells, :lines
+  attr_accessor :cells, :lines, :game_finished
 
   def initialize
     @cells = []
-    for i in (1..9) do
+    1.upto 9 do |i|
       cell = Cell.new(i)
       @cells << cell
     end
@@ -31,53 +29,60 @@ class Board
     }
   end
 
-  def output
+  def output_board
+    puts "====="
     @cells.each do |cell|
-      print cell.state + " "
+      print cell.state || cell.id
+      print " "
       puts "" if cell.id % 3 == 0
     end
+    puts "====="
   end
 
-  def check_state
-    x_won = @lines.any? do |key, line|
-              line.all? {|cell| cell.state == 'x'}
+  def check_state(current_player)
+    won = @lines.any? do |key, line|
+              line.all? {|cell| cell.state == current_player}
             end
-    o_won = @lines.any? do |key, line|
-              line.all? {|cell| cell.state == 'o'}
-            end
-    all_occupied = @cells.all? do |cell|
-                      cell.state == 'x' || cell.state == 'o'
-                    end
-    if x_won
-      puts "Player 1 won!"
-      return "finished"
-    elsif o_won
-      puts "Player 2 won!"
-      return "finished"
+    all_occupied = @cells.all? {|cell| cell.state}
+    
+    self.game_finished = won || all_occupied
+
+    if won
+      puts "Player -#{current_player}- won!"
     elsif all_occupied
       puts "Draw!"
-      return "finished"
     end
   end
 end
 
 board = Board.new
-board.output
+board.output_board
+
+counter = 1
 loop do
-  puts "Player 1, choose a number of an empty cell"
-  input_p1 = gets.chomp.to_i
-  board.cells[input_p1 - 1].state = "x"
-  board.output
-   if board.check_state == "finished"
-     puts "Game over"
-     break
-   end
-   puts "Player 2, choose a number of an empty cell"
-   input_p2 = gets.chomp.to_i
-   board.cells[input_p2 - 1].state = "o"
-   board.output
-   if board.check_state == "finished"
-     puts "Game over"
-     break
-   end
+  current_player = counter.odd? ? "X" : "O"
+
+  puts "Player -#{current_player}-, please choose a number of an empty cell"
+  input = gets.chomp.to_i
+
+  unless input.between?(1, 9)
+    puts "Only integers between 1 - 9 allowed"
+    redo
+  end
+
+  if board.cells[input - 1].state
+    puts "Oops, this cell is occupied!"
+    redo
+  end
+
+  board.cells[input - 1].state = current_player
+  board.output_board
+  board.check_state(current_player)
+
+  if board.game_finished
+    puts "Game over"
+    break
+  end
+
+  counter += 1
 end
