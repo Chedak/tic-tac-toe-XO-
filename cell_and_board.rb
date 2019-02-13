@@ -9,9 +9,11 @@ end
 
 class Board
   attr_accessor :cells, :lines, :game_finished
+  NUMBER_OF_CELLS = 9
+  ROW_CELLS = 3
 
   def initialize
-    @cells = (1..9).map { |i| Cell.new(i) }
+    @cells = (1..NUMBER_OF_CELLS).map { |i| Cell.new(i) }
 
     @lines = {
       top:    @cells[0..2],
@@ -27,7 +29,7 @@ class Board
 
   def output_board
     puts "====="
-    @cells.each_slice(3) do |row|
+    @cells.each_slice(ROW_CELLS) do |row|
       row.each do |cell|
         print "#{cell.state || cell.id} "
       end
