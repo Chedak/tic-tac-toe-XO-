@@ -11,11 +11,7 @@ class Board
   attr_accessor :cells, :lines, :game_finished
 
   def initialize
-    @cells = []
-    1.upto 9 do |i|
-      cell = Cell.new(i)
-      @cells << cell
-    end
+    @cells = (1..9).map { |i| Cell.new(i) }
 
     @lines = {
       top:    @cells[0..2],
@@ -31,10 +27,11 @@ class Board
 
   def output_board
     puts "====="
-    @cells.each do |cell|
-      print cell.state || cell.id
-      print " "
-      puts "" if cell.id % 3 == 0
+    @cells.each_slice(3) do |row|
+      row.each do |cell|
+        print "#{cell.state || cell.id} "
+      end
+      puts ""
     end
     puts "====="
   end
@@ -43,7 +40,7 @@ class Board
     won = @lines.any? do |key, line|
               line.all? {|cell| cell.state == current_player}
             end
-    all_occupied = @cells.all? {|cell| cell.state}
+    all_occupied = @cells.all?(&:state)
 
     self.game_finished = won || all_occupied
 
