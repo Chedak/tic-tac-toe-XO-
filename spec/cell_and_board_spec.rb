@@ -7,3 +7,11 @@ RSpec.describe Cell do
     expect(cell.id).to eql(id)
   end
 end
+
+RSpec.describe Board do
+  describe "#check_state" do
+    it "sets game_finished attribute to true when someone wins" do
+      
+    end
+  end
+end
